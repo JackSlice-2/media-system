@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Management</title>
+</head>
+<body>
+    <h1>Movie Management</h1>
+
+    <!-- Form to fetch movies -->
+    <h2>Fetch Movies</h2>
+    <button onclick="getMovies()">Fetch Movies</button>
+    <div id="fetchMoviesResult"></div>
+
+    <!-- Form to create a new movie -->
+    <h2>Create Movie</h2>
+    <form id="createMovieForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br>
+        <label for="director">Director:</label>
+        <input type="text" id="director" name="director" required><br>
+        <label for="type">Type (Movie/Series):</label>
+        <select id="type" name="type">
+            <option value="Movie">Movie</option>
+            <option value="Series">Series</option>
+        </select><br>
+        <button type="button" onclick="createMovie()">Create Movie</button>
+    </form>
+    <div id="createMovieResult"></div>
+
+    <!-- Form to update a movie -->
+    <h2>Update Movie</h2>
+    <form id="updateMovieForm">
+        <label for="updateId">Movie ID:</label>
+        <input type="text" id="updateId" name="updateId" required><br>
+        <label for="updateTitle">New Title:</label>
+        <input type="text" id="updateTitle" name="updateTitle"><br>
+        <label for="updateDirector">New Director:</label>
+        <input type="text" id="updateDirector" name="updateDirector"><br>
+        <button type="button" onclick="updateMovie()">Update Movie</button>
+    </form>
+    <div id="updateMovieResult"></div>
+
+    <!-- Form to delete a movie -->
+    <h2>Delete Movie</h2>
+    <form id="deleteMovieForm">
+        <label for="deleteId">Movie ID:</label>
+        <input type="text" id="deleteId" name="deleteId" required><br>
+        <button type="button" onclick="deleteMovie()">Delete Movie</button>
+    </form>
+    <div id="deleteMovieResult"></div>
+
+    <!-- Form to watch a movie (GET file and play) -->
+    <h2>Watch Movie</h2>
+    <form id="watchMovieForm">
+        <label for="watchId">Movie ID:</label>
+        <input type="text" id="watchId" name="watchId" required><br>
+        <button type="button" onclick="watchMovie()">Watch Movie</button>
+    </form>
+    <div id="watchMovieResult"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    // Function to make a GET request to fetch movies
+    function getMovies() {
+        axios
+            .get('http://localhost:8000/movies') // Replace with your Go server URL
+            .then((response) => {
+                const movies = response.data;
+                const resultDiv = document.getElementById('fetchMoviesResult');
+                resultDiv.innerHTML = '<h3>Movies:</h3>' + JSON.stringify(movies, null, 2);
+            })
+            .catch((error) => {
+                const resultDiv = document.getElementById('fetchMoviesResult');
+                resultDiv.innerHTML = '<p>Error: ' + error.message + '</p>';
+            });
+    }
+
+    // Function to make a POST request to create a new movie
+    function createMovie() {
+        const title = document.getElementById('title').value;
+        const director = document.getElementById('director').value;
+        const type = document.getElementById('type').value;
+
+        axios
+            .post('http://localhost:8000/movies', { title, director, type }) // Replace with your Go server URL
+            .then((response) => {
+                const resultDiv = document.getElementById('createMovieResult');
+                resultDiv.innerHTML = '<p>Movie created successfully.</p>';
+            })
+            .catch((error) => {
+                const resultDiv = document.getElementById('createMovieResult');
+                resultDiv.innerHTML = '<p>Error: ' + error.message + '</p>';
+            });
+    }
+
+    // Function to make a PUT request to update a movie
+    function updateMovie() {
+        const updateId = document.getElementById('updateId').value;
+        const updateTitle = document.getElementById('updateTitle').value;
+        const updateDirector = document.getElementById('updateDirector').value;
+
+        axios
+            .put(`http://localhost:8000/movies/${updateId}`, { title: updateTitle, director: updateDirector }) // Replace with your Go server URL
+            .then((response) => {
+                const resultDiv = document.getElementById('updateMovieResult');
+                resultDiv.innerHTML = `<p>Movie with ID ${updateId} updated successfully.</p>`;
+            })
+            .catch((error) => {
+                const resultDiv = document.getElementById('updateMovieResult');
+                resultDiv.innerHTML = '<p>Error: ' + error.message + '</p>';
+            });
+    }
+
+    // Function to make a DELETE request to delete a movie
+    function deleteMovie() {
+        const deleteId = document.getElementById('deleteId').value;
+
+        axios
+            .delete(`http://localhost:8000/movies/${deleteId}`) // Replace with your Go server URL
+            .then((response) => {
+                const resultDiv = document.getElementById('deleteMovieResult');
+                resultDiv.innerHTML = `<p>Movie with ID ${deleteId} deleted successfully.</p>`;
+            })
+            .catch((error) => {
+                const resultDiv = document.getElementById('deleteMovieResult');
+                resultDiv.innerHTML = '<p>Error: ' + error.message + '</p>';
+            });
+    }
+
+    // Function to watch a movie (GET file and play)
+    function watchMovie() {
+        const watchId = document.getElementById('watchId').value;
+
+        // You can implement the logic to watch a movie (GET file and play) here
+        // This may involve opening a video player or redirecting to the movie file URL
+        // and is typically more complex than other operations
+    }
+</script>
+</body>
+</html>
